@@ -108,11 +108,16 @@ text_posts = {
 
 
 # creating endpoint
+# limit is a query parameter
+# query parameter = None makes it optional
+# add type to allow for fastapi to auto document the execution of the query
 @app.get("/posts")
-def get_all_posts():
+def get_all_posts(limit: int = None):
+    if limit: 
+        return list(text_posts.values())[:limit]
     return text_posts
 
-
+# endpoint for specific to id Post
 @app.get("/posts/{id}")
 def get_post(id: int):
     if id not in text_posts:
