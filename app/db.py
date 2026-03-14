@@ -33,7 +33,7 @@ async def create_db_and_tables():
     async with engine.begine() as conn:
         await conn.run_sync(DeclarativeBase.metadata.create_all)
 
-# gets session for us to get database and access it asynchronously
+# gets session for us to get database and access it asynchronously  
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_maker() as session:
         yield session
