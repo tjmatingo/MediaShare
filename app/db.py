@@ -33,7 +33,7 @@ async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
 # create db and tables
 async def create_db_and_tables():
-    async with engine.begine() as conn:
+    async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
 # gets session for us to get database and access it asynchronously  
