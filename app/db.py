@@ -11,8 +11,11 @@ from datetime import datetime
 # url of database local / remote
 DATABASE_URL = "sqlite+aiosqlite:///./test.db"
 
+class Base(DeclarativeBase):
+    pass
+
 # declarativeBase is for data model
-class Post(DeclarativeBase):
+class Post(Base):
     __tablename__ = "posts"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -31,7 +34,7 @@ async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 # create db and tables
 async def create_db_and_tables():
     async with engine.begine() as conn:
-        await conn.run_sync(DeclarativeBase.metadata.create_all)
+        await conn.run_sync(Base.metadata.create_all)
 
 # gets session for us to get database and access it asynchronously  
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
