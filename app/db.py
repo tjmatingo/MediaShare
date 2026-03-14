@@ -20,4 +20,4 @@ class Post(DeclarativeBase):
     url = Column(String, nullable=False)
     file_type = Column(String, nullable=False)
     file_name = Column(String, nullable=False)
-    created_at = Column(DateTime, defualt=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.utcnow)
