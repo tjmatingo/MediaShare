@@ -40,36 +40,37 @@ async def upload_file(
             temp_file_path = temp_file.name
             shutil.copyfileobj(file.file, temp_file)
 
-            upload_result = imagekit.files.upload(
-                file=open(temp_file_path, "rb"), 
-                file_name=f"{file.filename}",
-                use_unique_file_name=False,
-                tags=["backend-upload"],
-            )
-
-            if upload_result == 200:
-                
-                '''
-                how to create a new object in db
-                ~ Create object
-                ~session.add(object)
-                ~await sesssion.commit()
-                ~await session.refresh(object)
-
-                refreshing populates the object with missing data fields like id and created_at in this context
-                '''
-                post = Post(
-                    caption=caption,
-                    url=upload_result.url,
-                    file_type="video" if file.content_type.startswith("video/") else "image",
-                    file_name=upload_result.name,
+            with open(temp_file_path, "rb") as file_for_upload:
+                upload_result = imagekit.files.upload(
+                    file=file_for_upload, 
+                    file_name=f"{file.filename}",
+                    use_unique_file_name=False,
+                    tags=["backend-upload"],
                 )
 
-                session.add(post)
-                await session.commit()
-                await session.refresh(post)
+                if upload_result and hasattr(upload_result, 'url'):
+                    
+                    '''
+                    how to create a new object in db
+                    ~ Create object
+                    ~session.add(object)
+                    ~await sesssion.commit()
+                    ~await session.refresh(object)
 
-                return post
+                    refreshing populates the object with missing data fields like id and created_at in this context
+                    '''
+                    post = Post(
+                        caption=caption,
+                        url=upload_result.url,
+                        file_type="video" if file.content_type.startswith("video/") else "image",
+                        file_name=upload_result.name,
+                    )
+
+                    session.add(post)
+                    await session.commit()
+                    await session.refresh(post)
+
+                    return post
 
     except Exception as e: 
         raise HTTPException(status_code=500, detail=str(e))
