@@ -106,3 +106,27 @@ async def get_feed(
         )
 
     return {'posts': posts_data}
+
+
+# ednpoint to delete post
+@app.delete('/posts/{post_id}')
+async def delete_post(post_id: str, session: AsyncSession = Depends(get_async_session)):
+    try: 
+        post_uuid = uuid.UUID(post_id)
+
+        # query selector
+        result = await session.execute(select(Post).where(Post.id == post_uuid))
+
+        # returns the exact result
+        post = result.scalars().first()
+
+        if not post:
+            raise HTTPException(status_code=404, detail="Post not found :/")
+
+            # to delete post and reflect change in database
+            await session.delete(post)
+            await session.commit()
+
+            return {"success ": True, "message":"Post is permanently expunged!"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
