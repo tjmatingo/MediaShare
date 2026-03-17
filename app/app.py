@@ -122,11 +122,10 @@ async def delete_post(post_id: str, session: AsyncSession = Depends(get_async_se
 
         if not post:
             raise HTTPException(status_code=404, detail="Post not found :/")
-
-            # to delete post and reflect change in database
-            await session.delete(post)
-            await session.commit()
-
-            return {"success ": True, "message":"Post is permanently expunged!"}
+        
+        # to delete post and reflect change in database
+        await session.delete(post)
+        await session.commit()
+        return {"success ": True, "message":"Post is permanently expunged!"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
