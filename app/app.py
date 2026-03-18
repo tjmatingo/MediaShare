@@ -19,6 +19,9 @@ from sqlalchemy import select
 # user db imports
 from app.users import auth_backend, current_active_user, fastapi_Users
 
+# schemas
+from app.schemas import UserCreate, UserRead, UserUpdate
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await create_db_and_tables()
