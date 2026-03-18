@@ -3,5 +3,5 @@ from typing import Optional
 from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, FastAPIUsers, UUIDIDMixin, models
 from fastapi_users.authentication import AuthenticationBackend, BearerTransport, JWTStrategy
-from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
+from fastapi_users.db import SQLAlchemyUserDatabase
 from app.db import User, get_user_db
