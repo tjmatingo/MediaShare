@@ -27,6 +27,11 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+# including all endpoints from fastapi users 
+app.include_router(fastapi_Users.get_auth_router(auth_backend), prefix="/auth/jwt", tags=["auth"])
+app.include_router(fastapi_Users.get_register_router(UserRead, UserCreate), prefix="/auth", tags=["auth"])
+
+
 # endpoint to make new post
 @app.post("/upload")
 async def upload_file(
