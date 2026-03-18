@@ -38,4 +38,7 @@ def get_jwt_strategy():
 
 
 auth_backend = AuthenticationBackend(name="jwt", transport=bearer_transport, get_strategy=get_jwt_strategy)
+
 fastapi_Users = FastAPIUsers[User, uuid.UUID](get_user_manager, auth_backends=[auth_backend])
+# gets current active user using JWT token
+current_active_user = fastapi_Users.current_user(active=True)
