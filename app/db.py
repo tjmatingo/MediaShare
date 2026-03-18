@@ -18,7 +18,7 @@ class Base(DeclarativeBase):
     pass
 
 class User(SQLAlchemyBaseUserTableUUID, Base):
-    posts = relationship(argument="Post", back_populates="user")
+    posts = relationship(argument:"Post", back_populates="user")
     
 
 # declarativeBase is for data model
@@ -32,6 +32,8 @@ class Post(Base):
     file_type = Column(String, nullable=False)
     file_name = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship(argument:"User", back_populates="posts")
 
 
 # creation of db
