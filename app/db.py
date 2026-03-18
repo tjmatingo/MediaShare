@@ -19,7 +19,7 @@ class Base(DeclarativeBase):
 
 class User(SQLAlchemyBaseUserTableUUID, Base):
     posts = relationship(argument:"Post", back_populates="user")
-    
+    # one user to many posts relationship
 
 # declarativeBase is for data model
 class Post(Base):
