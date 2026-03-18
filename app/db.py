@@ -9,6 +9,7 @@ from sqlalchemy.orm import DeclarativeBase, relationship
 from datetime import datetime
 
 # User auth
+from fastapi import Depends
 from fastapi_users.db import SQLAlchemyUserDatabase, SQLAlchemyBaseUserTableUUID
 
 # url of database local / remote
@@ -50,3 +51,7 @@ async def create_db_and_tables():
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_maker() as session:
         yield session
+
+# gest session to users db
+async def get_user_db(session: AsyncGenerator = Depends(get_async_session)):
+    yield SQLAlchemyUserDatabase(session, User)
