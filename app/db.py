@@ -19,7 +19,7 @@ class Base(DeclarativeBase):
     pass
 
 class User(SQLAlchemyBaseUserTableUUID, Base):
-    posts = relationship(argument:"Post", back_populates="user")
+    posts = relationship(argument="Post", back_populates="user")
     # one user to many posts relationship
 
 # declarativeBase is for data model
@@ -34,7 +34,7 @@ class Post(Base):
     file_name = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    user = relationship(argument:"User", back_populates="posts")
+    user = relationship(argument="User", back_populates="posts")
 
 
 # creation of db
@@ -52,6 +52,6 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_maker() as session:
         yield session
 
-# gest session to users db
-async def get_user_db(session: AsyncGenerator = Depends(get_async_session)):
+# get session to users db
+async def get_user_db(session: AsyncSession = Depends(get_async_session)):
     yield SQLAlchemyUserDatabase(session, User)
