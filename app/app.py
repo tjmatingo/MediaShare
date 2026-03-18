@@ -2,14 +2,12 @@ from fastapi import FastAPI, HTTPException, File, UploadFile, Form, Depends
 from app.schemas import PostCreate, PostResponse
 
 # db imports 
-from app.db import Post, create_db_and_tables, get_async_session
+from app.db import Post, create_db_and_tables, get_async_session, User
 from app.images import imagekit
 import shutil
 import os 
 import tempfile
 import uuid
-
-
 
 # to create db automatically if not yet created 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -43,6 +41,8 @@ app.include_router(fastapi_Users.get_users_router(UserRead, UserUpdate), prefix=
 async def upload_file(
     file: UploadFile = File(...),
     caption: str = Form(""),
+    # user must be authenticated to access endpoint
+    user: User = Depends(current_active_user),
     session: AsyncSession = Depends(get_async_session)
 ):
     
@@ -98,7 +98,9 @@ async def upload_file(
 # endpoint to see posts
 @app.get('/feed')
 async def get_feed(
-    session: AsyncSession = Depends(get_async_session)
+    session: AsyncSession = Depends(get_async_session),
+    # User must be authenticated to acceess endpoint
+    user: User = Depends(current_active_user)
 ):
     # executing a query for all posts
     result  = await session.execute(select(Post).order_by(Post.created_at.desc()))
@@ -123,7 +125,7 @@ async def get_feed(
 
 # ednpoint to delete post
 @app.delete('/posts/{post_id}')
-async def delete_post(post_id: str, session: AsyncSession = Depends(get_async_session)):
+async def delete_post(post_id: str, session: AsyncSession = Depends(get_async_session), user: User = Depends(current_active_user)):
     try: 
         post_uuid = uuid.UUID(post_id)
 
