@@ -16,6 +16,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from contextlib import asynccontextmanager
 from sqlalchemy import select
 
+# user db imports
+from app.users import auth_backend, current_active_user, fastapi_Users
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
