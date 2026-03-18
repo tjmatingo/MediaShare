@@ -73,6 +73,7 @@ async def upload_file(
                     refreshing populates the object with missing data fields like id and created_at in this context
                     '''
                     post = Post(
+                        user_id = user.id,
                         caption=caption,
                         url=upload_result.url,
                         file_type="video" if file.content_type.startswith("video/") else "image",
@@ -137,6 +138,9 @@ async def delete_post(post_id: str, session: AsyncSession = Depends(get_async_se
 
         if not post:
             raise HTTPException(status_code=404, detail="Post not found :/")
+
+        if str(post.user_id) != str(user.id):
+            raise HTTPException(status_code=403, detail="You are not authorized to delete this!😡")
         
         # to delete post and reflect change in database
         await session.delete(post)
