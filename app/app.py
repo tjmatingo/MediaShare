@@ -123,7 +123,7 @@ async def get_feed(
                 "file_name": post.file_name,
                 "created_at": post.created_at.isoformat(),
                 "is_owner": post.user_id == user.id,
-                # "email": user_dict.get(post.user_id, "User not Found😢")
+                "email": user_dict.get(post.user_id, "User not Found😢")
             }
         )
 
