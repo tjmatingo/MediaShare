@@ -104,9 +104,12 @@ async def get_feed(
     user: User = Depends(current_active_user)
 ):
     # executing a query for all posts
-    result  = await session.execute(select(Post).order_by(Post.created_at.desc()))
+    result = await session.execute(select(Post).order_by(Post.created_at.desc()))
     posts = [row[0] for row in result.all()]
 
+    result = await session.execute(select(User))
+    users = [row[0] for row in result.all()]
+    user_dict = {u.id: u.email for u in users}
 
     posts_data = []
     for post in posts:
@@ -120,7 +123,7 @@ async def get_feed(
                 "file_name": post.file_name,
                 "created_at": post.created_at.isoformat(),
                 "is_owner": post.user_id == user.id,
-                "email": post.user.email
+                # "email": user_dict.get(post.user_id, "User not Found😢")
             }
         )
 
